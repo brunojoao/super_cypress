@@ -1,6 +1,9 @@
 describe('template spec', () => {
   it('passes', () => {
-    cy.visit('http://sm-hkm.docker.local:8080')
+    const BASE_URL = 'http://sm-hkm.docker.local:8080'
+
+    // LOGIN
+    cy.visit(BASE_URL)
 
     cy.get('input[name="username"]').type('administrador')
 
@@ -8,17 +11,16 @@ describe('template spec', () => {
 
     cy.get('button[type="submit"]').click()
 
-    cy.wait(3000)
+    // IMPORTAR REPORTES
+    cy.visit(`${BASE_URL}/receita/importar`)
 
-    cy.get('div.modal-close').then(($modal) => {
-      if ($modal.length) {
-        cy.wrap($modal).click()
-      }
-    })
+    cy.get('button#receita_register').click()
 
-    cy.get('ul.side-menu li')
-      .find('i.fa-file-text-o')
-      .parents('li')
-      .click()
+    cy.get('input#checkboxVarejo').check()
+
+    const cyGetModalPacienteRec = cy.get('input#modalPacienteRec')
+    cyGetModalPacienteRec.type('TESTE')
+    cy.wait(2000)
+    cyGetModalPacienteRec.type('{downarrow}').type('{enter}')
   })
 })
